@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Produto = require('../models/produtos');
 const mongoose = require('mongoose');
+const checkauth = require('../middleware/checkauth');
+
 
 //Cadastrando produto
+//Pode ser adicionado o parâmetro 'checkauth' para autenticar o usuário  para fazer alterações no banco
 router.post('/', (req, res, next) => {
 
     const produto = new Produto(
@@ -45,71 +48,58 @@ router.get('/', (req, res, next) => {
 //Recuperando um único produto pelo ID
 router.get('/:produtoId', (req, res, next) => {
     const id = req.params.produtoId;
-    Produto.findById('6092937f428a102d6e140dad');
-    if (id === '6092937f428a102d6e140dad') {
-        res.status(200).json(
-            {
-                message: 'produto encontrado',
-                id: id,
-
-            });
-            console.log(Produto);
-    }
-    else {
-        (err => {
-            res.status(400).json({
-                message: 'Produto não encontrado',
+    Produto.findById(id)   
+    .exec()
+        .then(doc => {
+            res.status(200).json({
+                message:'produto encontrado',
+                produto: doc
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
                 error: err
             });
         })
-    };
 });
 
 
 //Atualizando um produto pelo ID
 router.put('/:produtoId', (req, res, next) => {
-    const id = req.params.produtoId;
-    const preco = req.body.preco;
-    Produto.findByIdAndUpdate({ _id: '6092937f428a102d6e140dad', $set:{preco: 2456}, new: true })
+     const id = req.params.produtoId;
+     //Para atualizar outro produto deve ser alterado o valor parâmetro _id, o 2º parametro é o atributo a ser alterado e a atualização em si
+    Produto.findByIdAndUpdate({_id: "609fde2afdc398811775f609"}, {preco:2499}, {new:true})
     .exec()
-        
-        .then(result => {
-            res.status(201).json(doc,
-                {
-                    message: 'produto atualizado'
-                }
-            )
+    .then(doc =>{
+        res.status(201).json({
+            message:'produto atualizado',
+            produto: doc
         })
-        .catch(err => {
-                    (err => {
-                        res.status(400).json({
-                            message: 'Produto não encontrado',
-                            error: err
-                        })
-                    });
-                });
 
-   }
-)
+    })
+    .catch(err =>{
+        res.status(500).json({
+            message:'produto não encontrado'
+        });
+    })
+});
 
 //Deletando um produto pelo ID
 router.delete('/:produtoId', (req, res, next) => {
     const id = req.params.produtoId;
-    if (id === '6092937f428a102d6e140dad') {
-        Produto.findOneAndDelete({ _id: '6092937f428a102d6e140dad' })
+        Produto.findOneAndDelete({_id: "609fde2afdc398811775f609"})
+        .then(
         res.status(201).json(
             {
                 message: 'produto deletado'
             })
-    }
-    else {
-        (err => {
+        )
+        .catch(err => {
             res.status(400).json({
                 message: 'Produto não encontrado',
                 error: err
-            })
-        });
-    };
+            });
+        })
 });
 
 module.exports = router;

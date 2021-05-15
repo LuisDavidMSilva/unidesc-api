@@ -2,9 +2,11 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const produtoRoutes = require('./routes/produtos');
+const usuarioRoutes = require('./routes/usuarios');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-mongoose.connect('mongodb+srv://Luis:ehU0ih0yXj90Tsnn@unidesc.r15es.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {useNewUrlParser: true})
+mongoose.connect('mongodb+srv://Luis:ehU0ih0yXj90Tsnn@unidesc.r15es.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true});
 
 app.use(morgan('dev'));
 
@@ -26,6 +28,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
 app.use('/produtos', produtoRoutes);
+app.use('/usuarios', usuarioRoutes);
 
 app.use((req, res, next) =>{
     const error = new Error('not found');
