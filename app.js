@@ -6,7 +6,7 @@ const usuarioRoutes = require('./routes/usuarios');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-mongoose.connect('mongodb+srv://Luis:ehU0ih0yXj90Tsnn@unidesc.r15es.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('String de Conexão com o MongoDB', {useNewUrlPars                                    >
 
 app.use(morgan('dev'));
 
